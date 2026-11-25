@@ -1,30 +1,30 @@
 import { useEffect, useState } from 'react'
+import { getDocuments } from './api'
+import DocumentForm from './components/DocumentForm'
 import './App.css'
-
-const API_URL = 'http://127.0.0.1:8000'
 
 function App() {
   const [documents, setDocuments] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  const [reloadKey, setReloadKey] = useState(0)
 
   useEffect(() => {
-    fetch(`${API_URL}/api/documents`)
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error(`Serverul a răspuns cu ${response.status}`)
-        }
-        return response.json()
+    getDocuments()
+      .then((data) => {
+        setDocuments(data)
+        setError(null)
       })
-      .then((data) => setDocuments(data))
       .catch((err) => setError(err.message))
       .finally(() => setLoading(false))
-  }, [])
+  }, [reloadKey])
 
   return (
     <main className="container">
       <h1>The Study Summarizer</h1>
       <h2>Documentele mele</h2>
+
+      <DocumentForm onCreated={() => setReloadKey((key) => key + 1)} />
 
       {loading && <p>Se încarcă...</p>}
 
