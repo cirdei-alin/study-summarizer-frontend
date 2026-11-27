@@ -19,3 +19,15 @@ export function createDocument(title, fileType) {
     body: JSON.stringify({ title, fileType }),
   })
 }
+
+export function updateDocument(id, changes) {
+  return request(`/api/documents/${id}`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(changes),
+  })
+}
+
+export function deleteDocument(id) {
+  return request(`/api/documents/${id}`, { method: 'DELETE' })
+}

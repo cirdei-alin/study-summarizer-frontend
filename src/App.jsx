@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { getDocuments } from './api'
 import DocumentForm from './components/DocumentForm'
+import DocumentItem from './components/DocumentItem'
 import './App.css'
 
 function App() {
@@ -18,6 +19,10 @@ function App() {
       .catch((err) => setError(err.message))
       .finally(() => setLoading(false))
   }, [reloadKey])
+
+  function reload() {
+    setReloadKey((key) => key + 1)
+  }
 
   return (
     <main className="container">
@@ -38,11 +43,7 @@ function App() {
 
       <ul className="document-list">
         {documents.map((doc) => (
-          <li key={doc.id} className="document">
-            <span className="document-title">{doc.title}</span>
-            <span className="badge">{doc.fileType}</span>
-            <span className={`badge status-${doc.status}`}>{doc.status}</span>
-          </li>
+          <DocumentItem key={doc.id} doc={doc} onChanged={reload} />
         ))}
       </ul>
     </main>
